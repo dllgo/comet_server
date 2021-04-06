@@ -1,4 +1,4 @@
-package svc
+package server
 
 import (
 	"context"
@@ -6,16 +6,20 @@ import (
 
 	"github.com/dllgo/comet"
 	"github.com/dllgo/comet_server/comet_server"
+	"github.com/dllgo/comet_server/internal/logic"
+	"github.com/dllgo/comet_server/internal/svc"
 )
 
-func NewMessageHandler() *MessageHandler {
+func NewMessageHandler(svcCtx *svc.ServiceContext) *MessageHandler {
 	return &MessageHandler{ 
+		svcCtx: svcCtx,
 	}
 }
 
 //tcp event
 type MessageHandler struct {
 	comet.IEvent
+	svcCtx *svc.ServiceContext
 } 
 func (e *MessageHandler)OnClosed(c comet.IConn, err error){
 	log.Println("[EventHandler OnClosed] client: " + c.RemoteAddr().String() )
@@ -33,7 +37,6 @@ func (e *MessageHandler)GetUid(c comet.IConn) string{
 	return ""
 }
 func (e *MessageHandler)OnMessage(frame []byte, c comet.IConn){
-	 
 	log.Println("[TcpHandler] handle 接收到", e.GetUid(c), "的消息")
 	var input comet_server.Input
 	if err := input.XXX_Unmarshal(frame); err != nil {
@@ -41,16 +44,16 @@ func (e *MessageHandler)OnMessage(frame []byte, c comet.IConn){
 		return
 	}
 	switch input.Type {
-	case comet_server.PackageType_PT_HANDSHAKE:
+	case comet_server.PackageType_PT_HANDSHAKE: 
 		// 握手
 		e.handshake(c, input)
-	case comet_server.PackageType_PT_SYNC:
+	case comet_server.PackageType_PT_SYNC: 
 		// 同步
 		e.sync(c, input)
 	case comet_server.PackageType_PT_HEARTBEAT:
 		//心跳
 		e.heartbeat(c, input)
-	case comet_server.PackageType_PT_MESSAGE:
+	case comet_server.PackageType_PT_MESSAGE: 
 		// 消息
 		e.message(c, input)
 	case comet_server.PackageType_PT_ACK:
@@ -63,51 +66,52 @@ func (e *MessageHandler)OnMessage(frame []byte, c comet.IConn){
 // handshake 握手
 func (e *MessageHandler) handshake(c comet.IConn, input comet_server.Input) {
 	log.Println("[TcpHandler] handle", "handshake 握手")
-	frame ,err := e.output(input,comet_server.PackageType_PT_HANDSHAKE)
+	l := logic.NewHandshakeLogic(context.Background(), e.svcCtx)
+	output ,err := l.Handshake(&input)
 	if err != nil {
 		return
 	}
 	if c!=nil {
-		c.AsyncWrite(frame)	
+		c.AsyncWrite(output.GetData())	
 	}
 }
 
 // ack 回执
 func (e *MessageHandler) ack(c comet.IConn, input comet_server.Input) {
 	log.Println("[TcpHandler] handle", "ack")
-
-	frame ,err := e.output(input,comet_server.PackageType_PT_ACK)
+	l := logic.NewAckLogic(context.Background(), e.svcCtx)
+	output ,err := l.Ack(&input)
 	if err != nil {
 		return
 	}
 	if c!=nil {
-		c.AsyncWrite(frame)	
+		c.AsyncWrite(output.GetData())	
 	}
-	
 }
 
 // sync 同步
 func (e *MessageHandler) sync(c comet.IConn, input comet_server.Input) {
 	log.Println("[TcpHandler] handle", "sync")
-	frame ,err := e.output(input,comet_server.PackageType_PT_SYNC)
+	l := logic.NewSyncLogic(context.Background(), e.svcCtx)
+	output ,err := l.Sync(&input)
 	if err != nil {
 		return
 	}
 	if c!=nil {
-		c.AsyncWrite(frame)	
+		c.AsyncWrite(output.GetData())	
 	}
 }
 
 // Heartbeat 心跳
 func (e *MessageHandler) heartbeat(c comet.IConn, input comet_server.Input) {
 	log.Println("[TcpHandler] handle", "Heartbeat 心跳")
-	
-	frame ,err := e.output(input,comet_server.PackageType_PT_HEARTBEAT)
+	l := logic.NewHeartbeatLogic(context.Background(), e.svcCtx)
+	output ,err := l.Heartbeat(&input)
 	if err != nil {
 		return
 	}
 	if c!=nil {
-		c.AsyncWrite(frame)	
+		c.AsyncWrite(output.GetData())	
 	}
 }
 
@@ -115,22 +119,13 @@ func (e *MessageHandler) heartbeat(c comet.IConn, input comet_server.Input) {
 func (e *MessageHandler) message(c comet.IConn, input comet_server.Input) {
 	log.Println("[TcpHandler] handle", "Heartbeat 心跳")
 	 
-	frame ,err := e.output(input,comet_server.PackageType_PT_HEARTBEAT)
+	l := logic.NewBusinessLogic(context.Background(), e.svcCtx)
+	output ,err := l.Business(&input)
 	if err != nil {
 		return
 	}
 	if c!=nil {
-		c.AsyncWrite(frame)	
+		c.AsyncWrite(output.GetData())	
 	}
 }
-
-//out
-
-func (e *MessageHandler) output(input comet_server.Input,ptype comet_server.PackageType) ([]byte,error){
-	var output = comet_server.Output{
-		Type:      ptype,
-		RequestId: input.RequestId,
-	}
-
-	return output.GetData(),nil
-}
+ 

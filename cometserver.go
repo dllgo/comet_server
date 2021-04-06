@@ -31,7 +31,7 @@ func main() {
 
 
 	//comet server  
-	go comet.NewComet().Serve(svc.NewMessageHandler(),c.CometPort)
+	go comet.NewComet().Serve(server.NewMessageHandler(ctx),c.CometPort)
 	//
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

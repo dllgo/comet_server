@@ -173,4 +173,5 @@ service Comet_server {
   rpc send2group(Input) returns(Output);
   rpc send2room(Input) returns(Output);
   rpc send2push(Input) returns(Output); 
+  
 }

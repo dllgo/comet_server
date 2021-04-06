@@ -14,22 +14,22 @@ import (
 )
 
 type (
-	Face        = comet_server.Face
-	Location    = comet_server.Location
-	Custom      = comet_server.Custom
-	Output      = comet_server.Output
-	SyncInput   = comet_server.SyncInput
-	File        = comet_server.File
-	MessageACK  = comet_server.MessageACK
-	Message     = comet_server.Message
 	Text        = comet_server.Text
-	Image       = comet_server.Image
-	Sender      = comet_server.Sender
+	MessageSend = comet_server.MessageSend
 	Input       = comet_server.Input
 	SignInInput = comet_server.SignInInput
+	Face        = comet_server.Face
+	Image       = comet_server.Image
+	File        = comet_server.File
+	Location    = comet_server.Location
+	Sender      = comet_server.Sender
+	Message     = comet_server.Message
+	Output      = comet_server.Output
 	Voice       = comet_server.Voice
 	Command     = comet_server.Command
-	MessageSend = comet_server.MessageSend
+	Custom      = comet_server.Custom
+	MessageACK  = comet_server.MessageACK
+	SyncInput   = comet_server.SyncInput
 	SyncOutput  = comet_server.SyncOutput
 
 	CometServer interface {
