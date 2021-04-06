@@ -1,0 +1,7 @@
+Name: cometserver.rpc
+ListenOn: 127.0.0.1:21000
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: cometserver.rpc
+CometPort: 6000
