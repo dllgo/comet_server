@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"github.com/dllgo/comet"
 	"github.com/dllgo/comet_server/comet_server"
 	"github.com/dllgo/comet_server/internal/svc"
 	"github.com/tal-tech/go-zero/core/logx"
@@ -22,7 +23,7 @@ func NewSyncLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncLogic {
 	}
 }
 
-func (l *SyncLogic) Sync(in *comet_server.Input) (*comet_server.Output, error) {
+func (l *SyncLogic) Sync(in *comet_server.Input, c comet.IConn) (*comet_server.Output, error) {
 	// todo: add your logic here and delete this line
 
 	return &comet_server.Output{

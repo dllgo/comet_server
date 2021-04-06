@@ -37,12 +37,13 @@ func (e *MessageHandler)GetUid(c comet.IConn) string{
 	return ""
 }
 func (e *MessageHandler)OnMessage(frame []byte, c comet.IConn){
-	log.Println("[TcpHandler] handle 接收到", e.GetUid(c), "的消息")
+	
 	var input comet_server.Input
 	if err := input.XXX_Unmarshal(frame); err != nil {
 		log.Println("[MessageHandler] handle 解码错误", err)
 		return
-	}
+	} 
+	log.Println("[TcpHandler] handle 接收到", e.GetUid(c),input.Type, "的消息")
 	switch input.Type {
 	case comet_server.PackageType_PT_HANDSHAKE: 
 		// 握手
@@ -65,9 +66,9 @@ func (e *MessageHandler)OnMessage(frame []byte, c comet.IConn){
 }
 // handshake 握手
 func (e *MessageHandler) handshake(c comet.IConn, input comet_server.Input) {
-	log.Println("[TcpHandler] handle", "handshake 握手")
+	log.Println("[MessageHandler] handle", "handshake 握手")
 	l := logic.NewHandshakeLogic(context.Background(), e.svcCtx)
-	output ,err := l.Handshake(&input)
+	output ,err := l.Handshake(&input,c)
 	if err != nil {
 		return
 	}
@@ -78,9 +79,9 @@ func (e *MessageHandler) handshake(c comet.IConn, input comet_server.Input) {
 
 // ack 回执
 func (e *MessageHandler) ack(c comet.IConn, input comet_server.Input) {
-	log.Println("[TcpHandler] handle", "ack")
+	log.Println("[MessageHandler] handle", "ack")
 	l := logic.NewAckLogic(context.Background(), e.svcCtx)
-	output ,err := l.Ack(&input)
+	output ,err := l.Ack(&input,c)
 	if err != nil {
 		return
 	}
@@ -91,9 +92,9 @@ func (e *MessageHandler) ack(c comet.IConn, input comet_server.Input) {
 
 // sync 同步
 func (e *MessageHandler) sync(c comet.IConn, input comet_server.Input) {
-	log.Println("[TcpHandler] handle", "sync")
+	log.Println("[MessageHandler] handle", "sync")
 	l := logic.NewSyncLogic(context.Background(), e.svcCtx)
-	output ,err := l.Sync(&input)
+	output ,err := l.Sync(&input,c)
 	if err != nil {
 		return
 	}
@@ -104,9 +105,9 @@ func (e *MessageHandler) sync(c comet.IConn, input comet_server.Input) {
 
 // Heartbeat 心跳
 func (e *MessageHandler) heartbeat(c comet.IConn, input comet_server.Input) {
-	log.Println("[TcpHandler] handle", "Heartbeat 心跳")
+	log.Println("[MessageHandler] handle", "Heartbeat 心跳")
 	l := logic.NewHeartbeatLogic(context.Background(), e.svcCtx)
-	output ,err := l.Heartbeat(&input)
+	output ,err := l.Heartbeat(&input,c)
 	if err != nil {
 		return
 	}
@@ -117,10 +118,10 @@ func (e *MessageHandler) heartbeat(c comet.IConn, input comet_server.Input) {
 
 // Message 消息处理
 func (e *MessageHandler) message(c comet.IConn, input comet_server.Input) {
-	log.Println("[TcpHandler] handle", "Heartbeat 心跳")
+	log.Println("[MessageHandler] handle", "Business")
 	 
 	l := logic.NewBusinessLogic(context.Background(), e.svcCtx)
-	output ,err := l.Business(&input)
+	output ,err := l.Business(&input,c)
 	if err != nil {
 		return
 	}

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 
+	"github.com/dllgo/comet"
 	"github.com/dllgo/comet_server/comet_server"
 	"github.com/dllgo/comet_server/internal/svc"
 
@@ -23,7 +24,7 @@ func NewBusinessLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Business
 	}
 }
 
-func (l *BusinessLogic) Business(in *comet_server.Input) (*comet_server.Output, error) {
+func (l *BusinessLogic) Business(in *comet_server.Input, c comet.IConn) (*comet_server.Output, error) {
 	// todo: add your logic here and delete this line
 
 	return &comet_server.Output{
