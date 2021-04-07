@@ -23,8 +23,8 @@ func NewSend2userLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Send2us
 	}
 }
 
-func (l *Send2userLogic) Send2User(in *comet_server.Input) (*comet_server.Output, error) {
+func (l *Send2userLogic) Send2User(in *comet_server.Request) (*comet_server.Response, error) {
 	// todo: add your logic here and delete this line
 
-	return &comet_server.Output{}, nil
+	return &comet_server.Response{}, nil
 }

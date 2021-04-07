@@ -23,8 +23,8 @@ func NewSend2groupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Send2g
 	}
 }
 
-func (l *Send2groupLogic) Send2Group(in *comet_server.Input) (*comet_server.Output, error) {
+func (l *Send2groupLogic) Send2Group(in *comet_server.Request) (*comet_server.Response, error) {
 	// todo: add your logic here and delete this line
 
-	return &comet_server.Output{}, nil
+	return &comet_server.Response{}, nil
 }

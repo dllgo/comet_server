@@ -14,30 +14,17 @@ import (
 )
 
 type (
-	Text        = comet_server.Text
-	MessageSend = comet_server.MessageSend
-	Input       = comet_server.Input
-	SignInInput = comet_server.SignInInput
-	Face        = comet_server.Face
-	Image       = comet_server.Image
-	File        = comet_server.File
-	Location    = comet_server.Location
-	Sender      = comet_server.Sender
-	Message     = comet_server.Message
-	Output      = comet_server.Output
-	Voice       = comet_server.Voice
-	Command     = comet_server.Command
-	Custom      = comet_server.Custom
-	MessageACK  = comet_server.MessageACK
-	SyncInput   = comet_server.SyncInput
-	SyncOutput  = comet_server.SyncOutput
+	Request     = comet_server.Request
+	RequestAck  = comet_server.RequestAck
+	Response    = comet_server.Response
+	ResponseAck = comet_server.ResponseAck
 
 	CometServer interface {
-		Send2User(ctx context.Context, in *Input) (*Output, error)
-		Send2Friend(ctx context.Context, in *Input) (*Output, error)
-		Send2Group(ctx context.Context, in *Input) (*Output, error)
-		Send2Room(ctx context.Context, in *Input) (*Output, error)
-		Send2Push(ctx context.Context, in *Input) (*Output, error)
+		Send2User(ctx context.Context, in *Request) (*Response, error)
+		Send2Friend(ctx context.Context, in *Request) (*Response, error)
+		Send2Group(ctx context.Context, in *Request) (*Response, error)
+		Send2Room(ctx context.Context, in *Request) (*Response, error)
+		Send2Push(ctx context.Context, in *Request) (*Response, error)
 	}
 
 	defaultCometServer struct {
@@ -51,27 +38,27 @@ func NewCometServer(cli zrpc.Client) CometServer {
 	}
 }
 
-func (m *defaultCometServer) Send2User(ctx context.Context, in *Input) (*Output, error) {
+func (m *defaultCometServer) Send2User(ctx context.Context, in *Request) (*Response, error) {
 	client := comet_server.NewCometServerClient(m.cli.Conn())
 	return client.Send2User(ctx, in)
 }
 
-func (m *defaultCometServer) Send2Friend(ctx context.Context, in *Input) (*Output, error) {
+func (m *defaultCometServer) Send2Friend(ctx context.Context, in *Request) (*Response, error) {
 	client := comet_server.NewCometServerClient(m.cli.Conn())
 	return client.Send2Friend(ctx, in)
 }
 
-func (m *defaultCometServer) Send2Group(ctx context.Context, in *Input) (*Output, error) {
+func (m *defaultCometServer) Send2Group(ctx context.Context, in *Request) (*Response, error) {
 	client := comet_server.NewCometServerClient(m.cli.Conn())
 	return client.Send2Group(ctx, in)
 }
 
-func (m *defaultCometServer) Send2Room(ctx context.Context, in *Input) (*Output, error) {
+func (m *defaultCometServer) Send2Room(ctx context.Context, in *Request) (*Response, error) {
 	client := comet_server.NewCometServerClient(m.cli.Conn())
 	return client.Send2Room(ctx, in)
 }
 
-func (m *defaultCometServer) Send2Push(ctx context.Context, in *Input) (*Output, error) {
+func (m *defaultCometServer) Send2Push(ctx context.Context, in *Request) (*Response, error) {
 	client := comet_server.NewCometServerClient(m.cli.Conn())
 	return client.Send2Push(ctx, in)
 }

@@ -21,27 +21,27 @@ func NewCometServerServer(svcCtx *svc.ServiceContext) *CometServerServer {
 	}
 }
 
-func (s *CometServerServer) Send2User(ctx context.Context, in *comet_server.Input) (*comet_server.Output, error) {
+func (s *CometServerServer) Send2User(ctx context.Context, in *comet_server.Request) (*comet_server.Response, error) {
 	l := logic.NewSend2userLogic(ctx, s.svcCtx)
 	return l.Send2User(in)
 }
 
-func (s *CometServerServer) Send2Friend(ctx context.Context, in *comet_server.Input) (*comet_server.Output, error) {
+func (s *CometServerServer) Send2Friend(ctx context.Context, in *comet_server.Request) (*comet_server.Response, error) {
 	l := logic.NewSend2friendLogic(ctx, s.svcCtx)
 	return l.Send2Friend(in)
 }
 
-func (s *CometServerServer) Send2Group(ctx context.Context, in *comet_server.Input) (*comet_server.Output, error) {
+func (s *CometServerServer) Send2Group(ctx context.Context, in *comet_server.Request) (*comet_server.Response, error) {
 	l := logic.NewSend2groupLogic(ctx, s.svcCtx)
 	return l.Send2Group(in)
 }
 
-func (s *CometServerServer) Send2Room(ctx context.Context, in *comet_server.Input) (*comet_server.Output, error) {
+func (s *CometServerServer) Send2Room(ctx context.Context, in *comet_server.Request) (*comet_server.Response, error) {
 	l := logic.NewSend2roomLogic(ctx, s.svcCtx)
 	return l.Send2Room(in)
 }
 
-func (s *CometServerServer) Send2Push(ctx context.Context, in *comet_server.Input) (*comet_server.Output, error) {
+func (s *CometServerServer) Send2Push(ctx context.Context, in *comet_server.Request) (*comet_server.Response, error) {
 	l := logic.NewSend2pushLogic(ctx, s.svcCtx)
 	return l.Send2Push(in)
 }
